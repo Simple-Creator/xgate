@@ -14,7 +14,7 @@
 xGate is a lightweight, modern, and easy-to-use bastion host system built with Golang and Vue.js. It provides secure server access through a web interface, integrating web terminal and file management capabilities.
 
 For detailed information about features, architecture, and database structure, please refer to the [Project Description Document](./doc/description_en.md).
-![Example](img/feature.png)
+![Example](./doc/img/feature.png)
 
 ## Features
 

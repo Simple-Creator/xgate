@@ -16,7 +16,7 @@ xGate 是一个轻量、现代且易于使用的堡垒机系统，由 Golang 和
 
 关于功能、架构和数据库结构的详细说明，请参阅 [项目描述文档](./doc/description.md)。
 
-![示例](img/feature.png)
+![示例](./doc/img/feature.png)
 
 ## 功能特性
 
