@@ -1,0 +1,51 @@
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "8088:80"
+    depends_on:
+      - backend
+    networks:
+      - xgate-net
+
+  backend:
+    build: ./backend
+    restart: always
+    environment:
+      - XGATE_DATABASE_TYPE=mysql
+      - XGATE_DATABASE_HOST=db
+      - XGATE_DATABASE_PORT=3306
+      - XGATE_DATABASE_USER=xgate_user
+      - XGATE_DATABASE_PASSWORD=xgate_password
+      - XGATE_DATABASE_NAME=xgate_db
+      - XGATE_SERVER_PORT=8080
+      - XGATE_JWT_SECRET=a_very_secret_key_for_docker
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    networks:
+      - xgate-net
+
+  # --- MySQL 服务定义 ---
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_DATABASE: xgate_db
+      MYSQL_USER: xgate_user
+      MYSQL_PASSWORD: xgate_password
+      MYSQL_ROOT_PASSWORD: root_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - xgate-db-data:/var/lib/mysql
+    networks:
+      - xgate-net
+
+networks:
+  xgate-net:
+    driver: bridge
+
+volumes:
+  xgate-db-data: 

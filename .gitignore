@@ -1,0 +1,53 @@
+# 项目根目录通用忽略
+.DS_Store
+Thumbs.db
+*.log
+.env
+.env.local
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# ==============
+# frontend (Vue) 特定规则
+# ==============
+frontend/node_modules/
+frontend/dist/
+frontend/dist-ssr/
+frontend/.env
+frontend/.env.*
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/pnpm-debug.log*
+frontend/coverage/
+frontend/.cache/
+frontend/.vite/
+frontend/.vitepress/cache
+
+# ==============
+# backend (Go) 特定规则
+# ==============
+backend/bin/
+backend/pkg/
+backend/vendor/
+backend/*.exe
+backend/*.exe~
+backend/*.test
+backend/*.prof
+backend/cover.out
+backend/debug
+backend/build/
+backend/.air.conf
+backend/go.work
+backend/go.work.sum
+
+# 开发工具相关
+*.swp
+*.swo
+*~
+backend/jump.db

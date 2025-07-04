@@ -1,0 +1,30 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- 砖墙背景：淡灰色渐变 -->
+  <rect width="64" height="64" fill="url(#paint0_linear)"/>
+  <g stroke="#b0b8c1" stroke-width="2">
+    <rect x="0" y="0" width="16" height="16" fill="none"/>
+    <rect x="16" y="0" width="16" height="16" fill="none"/>
+    <rect x="32" y="0" width="16" height="16" fill="none"/>
+    <rect x="48" y="0" width="16" height="16" fill="none"/>
+    <rect x="8" y="16" width="16" height="16" fill="none"/>
+    <rect x="24" y="16" width="16" height="16" fill="none"/>
+    <rect x="40" y="16" width="16" height="16" fill="none"/>
+    <rect x="0" y="32" width="16" height="16" fill="none"/>
+    <rect x="16" y="32" width="16" height="16" fill="none"/>
+    <rect x="32" y="32" width="16" height="16" fill="none"/>
+    <rect x="48" y="32" width="16" height="16" fill="none"/>
+    <rect x="8" y="48" width="16" height="16" fill="none"/>
+    <rect x="24" y="48" width="16" height="16" fill="none"/>
+    <rect x="40" y="48" width="16" height="16" fill="none"/>
+  </g>
+  <!-- 门体：深蓝色 -->
+  <rect x="22" y="10" width="20" height="44" rx="4" fill="#1976D2"/>
+  <!-- 门把手 -->
+  <circle cx="38" cy="32" r="2.5" fill="#42A5F5"/>
+  <defs>
+    <linearGradient id="paint0_linear" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#f5f7fa"/>
+      <stop offset="1" stop-color="#c3cfe2"/>
+    </linearGradient>
+  </defs>
+</svg> 
