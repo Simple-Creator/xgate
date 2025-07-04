@@ -8,8 +8,8 @@ import (
 	"strings"
 	"time"
 
-	"jump-backend/config"
-	"jump-backend/models"
+	"xgate-backend/config"
+	"xgate-backend/models"
 
 	"fmt"
 

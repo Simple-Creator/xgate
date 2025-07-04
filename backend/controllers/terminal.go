@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"time"
 
-	"jump-backend/config"
-	"jump-backend/models"
+	"xgate-backend/config"
+	"xgate-backend/models"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"

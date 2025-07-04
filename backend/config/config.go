@@ -2,9 +2,9 @@ package config
 
 import (
 	"fmt"
-	"jump-backend/models"
 	"log"
 	"strings"
+	"xgate-backend/models"
 
 	"github.com/spf13/viper"
 	"gorm.io/driver/mysql"

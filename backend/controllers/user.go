@@ -1,12 +1,12 @@
 package controllers
 
 import (
-	"jump-backend/config"
-	"jump-backend/middleware"
-	"jump-backend/models"
 	"net/http"
 	"strings"
 	"time"
+	"xgate-backend/config"
+	"xgate-backend/middleware"
+	"xgate-backend/models"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"

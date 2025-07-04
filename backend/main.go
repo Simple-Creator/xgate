@@ -1,9 +1,9 @@
 package main
 
 import (
-	"jump-backend/config"
-	"jump-backend/middleware"
-	"jump-backend/routes"
+	"xgate-backend/config"
+	"xgate-backend/middleware"
+	"xgate-backend/routes"
 
 	"github.com/gin-gonic/gin"
 )

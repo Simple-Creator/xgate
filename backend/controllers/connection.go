@@ -2,13 +2,13 @@ package controllers
 
 import (
 	"fmt"
-	"jump-backend/config"
-	"jump-backend/models"
 	"net"
 	"net/http"
 	"sort"
 	"sync"
 	"time"
+	"xgate-backend/config"
+	"xgate-backend/models"
 
 	"github.com/gin-gonic/gin"
 )

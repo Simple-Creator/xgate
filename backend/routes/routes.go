@@ -1,8 +1,8 @@
 package routes
 
 import (
-	"jump-backend/controllers"
-	"jump-backend/middleware"
+	"xgate-backend/controllers"
+	"xgate-backend/middleware"
 
 	"github.com/gin-gonic/gin"
 )

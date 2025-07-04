@@ -1,9 +1,9 @@
 package middleware
 
 import (
-	"jump-backend/models"
 	"net/http"
 	"strings"
+	"xgate-backend/models"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
