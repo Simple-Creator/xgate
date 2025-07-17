@@ -36,7 +36,7 @@ xGate 是一个轻量、现代且易于使用的堡垒机系统，由 Golang 和
 
 ### 0. 单个docker部署(小白推荐)
 ``` bash
-docker run -d  -p 8088:80 xgate-allinone
+docker run -d  -p 8088:80 ipowerink/xgate-allinone
 ```
 访问：http://localhost:8088
 

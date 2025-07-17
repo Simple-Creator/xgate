@@ -33,7 +33,7 @@ You can deploy xGate using Docker, Docker Compose, or run it locally for develop
 
 ### 0. Single Docker Deployment (Recommended for Beginners)
 ```bash
-docker run -d -p 8088:80 xgate-allinone
+docker run -d -p 8088:80 ipowerink/xgate-allinone
 ```
 Access: http://localhost:8088
 
