@@ -16,7 +16,7 @@ COPY . .
 RUN go mod tidy
 
 # 构建 Go 应用
-RUN CGO_ENABLED=1 GOOS=linux go build -a -installsuffix cgo -o jump-backend .
+RUN CGO_ENABLED=1 GOOS=linux go build -a -installsuffix cgo -o xgate-backend .
 
 # ---- Release Stage ----
 # 使用一个非常小的基础镜像
@@ -26,7 +26,7 @@ FROM alpine:latest
 WORKDIR /app
 
 # 从构建阶段复制编译好的应用二进制文件
-COPY --from=builder /app/jump-backend .
+COPY --from=builder /app/xgate-backend .
 
 # (可选) 如果您希望将配置文件打包到镜像中，可以在这里复制
 # COPY --from=builder /app/config ./config
@@ -35,4 +35,4 @@ COPY --from=builder /app/jump-backend .
 EXPOSE 8080
 
 # 容器启动时运行的命令
-CMD ["./jump-backend"] 
+CMD ["./xgate-backend"] 

@@ -1,15 +1,19 @@
 services:
   frontend:
     build: ./frontend
+    image: xgate-frontend
     ports:
       - "8088:80"
     depends_on:
       - backend
+    environment:
+      - BACKEND_URL=backend:8080
     networks:
       - xgate-net
 
   backend:
     build: ./backend
+    image: xgate-backend
     restart: always
     environment:
       - XGATE_DATABASE_TYPE=mysql
@@ -23,7 +27,8 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     networks:
       - xgate-net
 
@@ -42,6 +47,11 @@ services:
       - xgate-db-data:/var/lib/mysql
     networks:
       - xgate-net
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "xgate_user", "--password=xgate_password"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
 networks:
   xgate-net:

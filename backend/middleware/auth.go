@@ -9,7 +9,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-var JWTKey = []byte("jump-secret-key") // Make sure this matches the key in user.go
+var JWTKey = []byte("xgate-secret-key") // Make sure this matches the key in user.go
 
 func JWTMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {

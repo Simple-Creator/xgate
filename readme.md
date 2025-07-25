@@ -113,6 +113,105 @@ docker run -d  -p 8088:80 ipowerink/xgate-allinone
      ```
    - 前端将在 `http://localhost:5173` 上运行。开发服务器已配置 API 请求代理到后端。
 
+## Docker 部署
+
+### 方式一：使用 Docker Compose（推荐）
+
+最简单的方式是使用 Docker Compose 启动所有服务：
+
+```bash
+docker-compose up -d
+```
+
+访问 http://localhost:8088 即可。
+
+### 方式二：单独运行 Docker 容器
+
+如果你想单独运行各个容器，需要先使用单独的 nginx 配置文件进行构建：
+
+1. 构建后端：
+```bash
+cd backend
+docker build -t xgate-backend .
+```
+
+2. 构建前端（使用单独配置）：
+```bash
+cd frontend
+# 复制单独运行的配置
+cp nginx-standalone.conf nginx.conf
+docker build -t xgate-frontend .
+```
+
+3. 运行 MySQL：
+```bash
+docker run -d --name xgate-db \
+  -e MYSQL_DATABASE=xgate_db \
+  -e MYSQL_USER=xgate_user \
+  -e MYSQL_PASSWORD=xgate_password \
+  -e MYSQL_ROOT_PASSWORD=root_password \
+  -p 3306:3306 \
+  mysql:8.0
+```
+
+4. 运行后端：
+```bash
+docker run -d --name xgate-backend \
+  -e XGATE_DATABASE_TYPE=mysql \
+  -e XGATE_DATABASE_HOST=host.docker.internal \
+  -e XGATE_DATABASE_PORT=3306 \
+  -e XGATE_DATABASE_USER=xgate_user \
+  -e XGATE_DATABASE_PASSWORD=xgate_password \
+  -e XGATE_DATABASE_NAME=xgate_db \
+  -e XGATE_SERVER_PORT=8080 \
+  -e XGATE_JWT_SECRET=a_very_secret_key \
+  -p 8080:8080 \
+  xgate-backend
+```
+
+5. 运行前端：
+```bash
+docker run -d --name xgate-frontend \
+  -p 8088:80 \
+  xgate-frontend
+```
+
+访问 http://localhost:8088 即可。
+
+注意：在 Linux 系统中，需要将 `host.docker.internal` 替换为宿主机的实际 IP 地址。
+
+### 方式三：使用组合式镜像（前后端一体）
+
+项目还提供了将前后端打包在一起的组合式镜像，这种方式只需要一个容器即可运行，适合简单部署和测试：
+
+1. 构建组合式镜像：
+```bash
+docker build -t xgate-allinone .
+```
+
+2. 运行 MySQL：
+```bash
+docker run -d --name xgate-db \
+  -e MYSQL_DATABASE=xgate_db \
+  -e MYSQL_USER=xgate_user \
+  -e MYSQL_PASSWORD=xgate_password \
+  -e MYSQL_ROOT_PASSWORD=root_password \
+  -p 3306:3306 \
+  mysql:8.0
+```
+
+3. 运行组合式容器：
+```bash
+docker run -d --name xgate-allinone \
+  -e XGATE_DATABASE_HOST=host.docker.internal \
+  -p 80:80 \
+  xgate-allinone
+```
+
+访问 http://localhost 即可。
+
+注意：组合式镜像默认已经配置好了前端访问后端的代理，并且后端 API 地址为本地地址（127.0.0.1），但连接数据库时仍需要使用 host.docker.internal 或宿主机 IP。
+
 ## 环境变量
 
 后端服务的配置可以通过环境变量进行管理。
