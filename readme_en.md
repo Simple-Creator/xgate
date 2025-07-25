@@ -31,59 +31,110 @@ For detailed information about features, architecture, and database structure, p
 
 You can deploy xGate using Docker, Docker Compose, or run it locally for development.
 
-### 0. Single Docker Deployment (Recommended for Beginners)
+### Method 1: Using Docker Compose (Recommended)
+
+This is the simplest way to start all services together:
+
 ```bash
-docker run -d -p 8088:80 ipowerink/xgate-allinone
+docker-compose up -d
 ```
-Access: http://localhost:8088
 
-### 1. Docker Compose
+Access http://localhost:8088 in your browser.
 
-This is the simplest way to start. This method will start the frontend, backend, and a MySQL database simultaneously.
+### Method 2: Running Separate Docker Containers
 
-**Requirements**: `docker` and `docker-compose` installed.
+If you want to run separate containers, you'll need to use a custom nginx configuration:
 
-**Steps**:
-1. Clone this repository.
-2. Navigate to the project root directory.
-3. Run the following command:
-   ```bash
-   docker-compose up -d
-   ```
-4. Access `http://localhost:8088` in your browser.
+1. Build the backend:
+```bash
+cd backend
+docker build -t xgate-backend .
+```
 
-The `docker-compose.yml` file is pre-configured to use MySQL. All data will be persisted in Docker volumes.
+2. Build the frontend (using standalone config):
+```bash
+cd frontend
+# Copy the standalone configuration
+cp nginx-standalone.conf nginx.conf
+docker build -t xgate-frontend .
+```
 
-### 2. Single Docker Container
+3. Run MySQL:
+```bash
+docker run -d --name xgate-db \
+  -e MYSQL_DATABASE=xgate_db \
+  -e MYSQL_USER=xgate_user \
+  -e MYSQL_PASSWORD=xgate_password \
+  -e MYSQL_ROOT_PASSWORD=root_password \
+  -p 3306:3306 \
+  mysql:8.0
+```
 
-You can run the entire application (frontend + backend) in a single Docker container. This setup uses the built-in SQLite database by default, with data persisted inside the container.
+4. Run the backend:
+```bash
+docker run -d --name xgate-backend \
+  -e XGATE_DATABASE_TYPE=mysql \
+  -e XGATE_DATABASE_PORT=3306 \
+  -e XGATE_DATABASE_USER=xgate_user \
+  -e XGATE_DATABASE_PASSWORD=xgate_password \
+  -e XGATE_DATABASE_NAME=xgate_db \
+  -e XGATE_SERVER_PORT=8080 \
+  -e XGATE_JWT_SECRET=a_very_secret_key \
+  -p 8080:8080 \
+  xgate-backend
+```
 
-**Requirements**: `docker` installed.
+5. Run the frontend:
+```bash
+docker run -d --name xgate-frontend \
+  -p 8088:80 \
+  xgate-frontend
+```
 
-**Steps**:
-1. Clone this repository.
-2. Build the image using the root directory's `Dockerfile`:
-   ```bash
-   docker build -t xgate-server .
-   ```
-3. Run the container:
-   ```bash
-   # Using SQLite (default)
-   docker run -d -p 8088:8080 --name xgate-instance xgate-server
+Access http://localhost:8088 in your browser.
 
-   # Or, connect to an external MySQL database
-   docker run -d -p 8088:8080 --name xgate-instance \
-     -e XGATE_DATABASE_TYPE=mysql \
-     -e XGATE_DATABASE_HOST=<your-mysql-host> \
-     -e XGATE_DATABASE_PORT=<your-mysql-port> \
-     -e XGATE_DATABASE_USER=<your-mysql-username> \
-     -e XGATE_DATABASE_PASSWORD=<your-mysql-password> \
-     -e XGATE_DATABASE_NAME=<your-mysql-database> \
-     xgate-server
-   ```
-4. Access `http://localhost:8088` in your browser.
+### Method 3: All-in-One Image (Frontend & Backend)
 
-### 3. Local Development
+The project also provides an all-in-one image that packages frontend and backend together, requiring only one container - ideal for simple deployment and testing:
+
+1. Build the all-in-one image:
+```bash
+docker build -t xgate-allinone .
+```
+
+2. Run the all-in-one container:
+```bash
+docker run -d --name xgate-allinone \
+  -p 80:80 \
+  xgate-allinone
+```
+
+Access http://localhost in your browser.
+
+#### All-in-One Image Environment Variables
+
+The all-in-one image uses SQLite database by default. Available environment variables:
+
+- `XGATE_DATABASE_TYPE`: Database type, defaults to `sqlite`. Set to `mysql` if you need MySQL.
+- `XGATE_SERVER_PORT`: Backend service port, defaults to `8080`.
+- `XGATE_JWT_SECRET`: JWT key, defaults to a preset value.
+
+If switching to MySQL mode, you'll need these additional variables:
+```bash
+docker run -d --name xgate-allinone \
+  -e XGATE_DATABASE_TYPE=mysql \
+  -e XGATE_DATABASE_HOST=host.docker.internal \
+  -e XGATE_DATABASE_PORT=3306 \
+  -e XGATE_DATABASE_USER=xgate_user \
+  -e XGATE_DATABASE_PASSWORD=xgate_password \
+  -e XGATE_DATABASE_NAME=xgate_db \
+  -p 80:80 \
+  xgate-allinone
+```
+
+**Note:** When using SQLite mode (default), MySQL-related environment variables like `XGATE_DATABASE_HOST` will be ignored.
+
+### Local Development
 
 Suitable for developers who want to contribute code or run the service locally.
 
@@ -118,11 +169,11 @@ Backend service configuration can be managed through environment variables.
 | `XGATE_SERVER_PORT`        | Port for the backend service to listen on.                           | `8080`                               |
 | `XGATE_JWT_SECRET`         | **(Required for production)** Secret key for signing JWT tokens. Please change to a long and random string. | `a_very_secret_key_for_local_dev`    |
 | `XGATE_DATABASE_TYPE`      | Database type to use. Set to `mysql` to enable MySQL.                | `sqlite`                             |
-| `XGATE_DATABASE_HOST`      | Hostname or IP address of the database server.                       | `localhost`                          |
-| `XGATE_DATABASE_PORT`      | Port of the database server.                                          | `3306`                               |
-| `XGATE_DATABASE_USER`      | Username for database connection.                                     | `root`                               |
-| `XGATE_DATABASE_PASSWORD`  | Password for database connection.                                     | (empty string)                       |
-| `XGATE_DATABASE_NAME`      | Name of the database to connect to.                                   | `xgate`                              |
+| `XGATE_DATABASE_HOST`      | Hostname or IP address of the database server (MySQL only).          | `localhost`                          |
+| `XGATE_DATABASE_PORT`      | Port of the database server (MySQL only).                             | `3306`                               |
+| `XGATE_DATABASE_USER`      | Username for database connection (MySQL only).                        | `root`                               |
+| `XGATE_DATABASE_PASSWORD`  | Password for database connection (MySQL only).                        | (empty string)                       |
+| `XGATE_DATABASE_NAME`      | Name of the database to connect to (MySQL only).                      | `xgate`                              |
 | `XGATE_DATABASE_PATH`      | (SQLite only) Path to the SQLite database file.                      | `xgate.db`                           |
 
 ## Contributing

@@ -19,10 +19,14 @@ spec:
           ports:
             - containerPort: 80
           env:
+            # 基本配置
             - name: XGATE_SERVER_PORT
               value: "8080"
             - name: XGATE_JWT_SECRET
               value: "test-secret"
+              
+            # 数据库配置 - 使用 MySQL
+            # 注意：如果 XGATE_DATABASE_TYPE=sqlite（默认值），则以下 MySQL 相关环境变量可以省略
             - name: XGATE_DATABASE_TYPE
               value: "mysql"
             - name: XGATE_DATABASE_HOST

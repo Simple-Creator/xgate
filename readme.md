@@ -189,28 +189,35 @@ docker run -d --name xgate-frontend \
 docker build -t xgate-allinone .
 ```
 
-2. 运行 MySQL：
-```bash
-docker run -d --name xgate-db \
-  -e MYSQL_DATABASE=xgate_db \
-  -e MYSQL_USER=xgate_user \
-  -e MYSQL_PASSWORD=xgate_password \
-  -e MYSQL_ROOT_PASSWORD=root_password \
-  -p 3306:3306 \
-  mysql:8.0
-```
-
-3. 运行组合式容器：
+2. 运行组合式容器：
 ```bash
 docker run -d --name xgate-allinone \
-  -e XGATE_DATABASE_HOST=host.docker.internal \
   -p 80:80 \
   xgate-allinone
 ```
 
 访问 http://localhost 即可。
 
-注意：组合式镜像默认已经配置好了前端访问后端的代理，并且后端 API 地址为本地地址（127.0.0.1），但连接数据库时仍需要使用 host.docker.internal 或宿主机 IP。
+#### 组合式镜像环境变量说明
+
+组合式镜像默认使用 SQLite 数据库，以下是可用的环境变量：
+
+- `XGATE_DATABASE_TYPE`: 数据库类型，默认为 `sqlite`，如果设为 `mysql`，则需要额外配置其他数据库连接参数
+- `XGATE_SERVER_PORT`: 后端服务端口，默认为 `8080`
+- `XGATE_JWT_SECRET`: JWT 密钥，默认为预设值
+
+如果切换到 MySQL 模式，需要额外设置这些环境变量：
+```bash
+docker run -d --name xgate-allinone \
+  -e XGATE_DATABASE_TYPE=mysql \
+  -e XGATE_DATABASE_PORT=3306 \
+  -e XGATE_DATABASE_USER=xgate_user \
+  -e XGATE_DATABASE_PASSWORD=xgate_password \
+  -e XGATE_DATABASE_NAME=xgate_db \
+  -p 80:80 \
+  xgate-allinone
+```
+
 
 ## 环境变量
 
